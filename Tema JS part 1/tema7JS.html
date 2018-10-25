@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <script>
+
+            //O functie care intoarce suma primelor N numere prime - nu stiu sa fac tema, nu stiu ca combin cele 2 functii :(
+            
+        function estePrim(n){
+            for (var i=2; i<=n-1; i++){
+                if(n%i===0){
+                    return "nu este prim";
+                }
+                    return "este prim";
+                }   
+        }
+        console.log(estePrim(7));   
+        console.log(estePrim(4));   
+        console.log(estePrim(11)); 
+        
+
+        function sumaLista(arr){
+                    var suma=0;
+                    for (var i=0; i<arr.length; i++){
+                        suma = suma + arr[i];
+                    }
+                    return suma;
+                }
+                console.log(sumaLista([1,2,3,4]));
+                
+        </script>
+
+
+
+
+<body>
+</body>
+
+</html>
