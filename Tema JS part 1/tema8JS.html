@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+
+        //O functie care primeste un parametru de tip string si intoarce inversul acestuia (abc => cba)
+           
+        function reverse(s) {
+            var o = '';
+            for (var i = s.length - 1; i >= 0; i--)
+                o += s[i];
+            return o;
+}
+        console.log(reverse("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+
+
+
+function reverse(s){
+    return s.split("").reverse().join("");
+}
+console.log(reverse("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+
+
+        </script>
+
+    
+
+
+
+<body>
+
+
+</body>
+
+</html>
