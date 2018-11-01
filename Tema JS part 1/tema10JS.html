@@ -4,9 +4,15 @@
             <script>
             // O functie care primeste 2 parametri(arr - array de nr intregi si x - numar) si verifica daca x exista in array
             
-            function checkNr(a, o1234) {
-                var 
-
+            function checkNr(arr,x) {
+                for (var index = 0; index < arr.length; index++) {
+                    if (arr[index]==x) {
+                        return true;
+                    }
+                } 
+            }
+            console.log(checkNr([1,2,3,4,5,6],2));
+    
             </script>
     </head>
 <Style>
