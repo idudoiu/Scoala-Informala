@@ -2,12 +2,21 @@
 <html>
     <head>
             <script>
-            // O functie care intoarce produsul primelor N numere IMPARE pozitive ???????????
-            
+            // 9. O functie care intoarce produsul primelor N numere IMPARE pozitive
+            function produs(n) {
+            var totalProdus = 1;
+                if(n <= 0) {
+                    return 0;
+                } else {
+                    for (i = 0; i < n; i++){
+                    totalProdus = totalProdus * (i*2+1);
+                }
+                return totalProdus;
+                }
+            }
 
-            
-            console.log(produs(5))
-
+            console.log(produs(0));
+        
             </script>
     </head>
 <Style>
