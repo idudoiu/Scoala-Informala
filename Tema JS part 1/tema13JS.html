@@ -4,17 +4,18 @@
             <script>
             // O functie care verifica daca exista duplicate intr-un array primit ca parametru
 
-            function numbers(arr) {
-                for(var i = 0;i < arr.length; i++) {
-                    for(var j = 0;j < arr.length; j++) {
-                        if (arr[i]==arr[j] && i!=j){
-                            return true;
-                        }          
-        }
-    }
-}
-                
-                console.log(numbers([1, 2, 4, 3, 5, 5]));
+            function numbers(arr){
+                        for(var i = 0;i < arr.length; i++){
+                            for(var j = 0;j < arr.length; j++){
+                            if (arr[i]==arr[j] && i!=j){
+                        return true;
+                        }else{
+                        return false;      
+                            }
+                        }
+                    }
+                }
+                console.log(numbers([1, 2, 4, 3, 5, 4]));
             </script>
     </head>
 <Style>

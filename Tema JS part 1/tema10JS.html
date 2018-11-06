@@ -5,13 +5,19 @@
             // O functie care primeste 2 parametri(arr - array de nr intregi si x - numar) si verifica daca x exista in array
             
             function checkNr(arr,x) {
-                for (var index = 0; index < arr.length; index++) {
-                    if (arr[index]==x) {
-                        return true;
+                        for (var index = 0; index < arr.length; index++) {
+                            if (arr[index]==x) {
+                                return true;
+                            }else{
+                                for (arr[index]!=x){
+                                    return false;
+                                }
+                                
+                            }
+                        } 
                     }
-                } 
-            }
-            console.log(checkNr([1,2,3,4,5,6],2));
+                
+                    console.log(checkNr([1,2,3,4,5,6],6));
     
             </script>
     </head>
