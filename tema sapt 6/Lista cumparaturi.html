@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body{
+				background-color: #c498ec;
+			}
+			.content{
+				width: 300px;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+			.mark{
+				background-color:pink;
+				border-radius: 3px;
+			}
+			.formular{
+				background-color: white;
+				border-radius: 10px;
+				width: 600px;
+				margin: 10px;
+				padding: 20px;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+			#sort{
+				background-color: #c498ec;
+				border-radius: 3px;
+			}
+			#submit{
+				background-color: #57f298;
+				border-radius: 3px;
+				
+			}
+
+		</style>
+		<script>
+			var persoane=[
+			];
+
+			var indexEditare = -1;
+			console.log(persoane);
+			
+			function deseneazaTabel(){
+				var str = "";
+				for(var i=0;i<persoane.length;i++){
+					str += `<tr>
+								<td>${persoane[i].nume}</td>
+								<td>
+									<button class="mark" onclick="mark(${i});">Mark as buyed</button>
+								</td>
+							</tr>`;
+				}
+				document.querySelector("table tbody").innerHTML=str;
+			}
+			function adauga(t,event){
+				event.preventDefault();
+				var pers = {};
+				var inputs = t.querySelectorAll("input[name]");
+				for(var i=0;i<inputs.length;i++){
+					var a = inputs[i].getAttribute("name");
+					var v = inputs[i].value;
+					pers[a] = v;
+				}
+				if(indexEditare===-1){
+					persoane.push(pers);
+				}
+				deseneazaTabel();
+				t.reset();
+			}
+			function sortare(coloana){
+				persoane.sort(function (a,b){
+					if(a[coloana]>b[coloana]){
+						return 1;
+					}
+					if(a[coloana]<b[coloana]){
+						return -1;
+					}
+					return 0;
+				});
+				deseneazaTabel();
+			}
+			
+			function sortare2(coloana){
+				persoane.sort(function (a,b){
+					if(a[coloana]<b[coloana]){
+						return 1;
+					}
+					if(a[coloana]>b[coloana]){
+						return -1;
+					}
+					return 0;
+				});
+				deseneazaTabel();
+			}
+			
+			// aici m-am blocat :(
+			 function mark(idx){
+				 	persoane[idex];
+					persoane[idex].marcat = true;
+
+					// document.getElementById("marcat").style.textDecoration = 'line-through';
+				
+					deseneazaTabel();
+			 }
+		
+
+			/*
+			function mark(idx){
+				if(confirm("Do you want to delete?")){
+					persoane.splice(idx,1);
+					deseneazaTabel();
+				}
+			}
+			*/
+			
+			
+		</script>
+	</head>
+	<body>
+		<div class="formular">
+			<div class="content">
+			<h1>SHOPPING LIST</h1>
+				<form id="formAdaugare" onsubmit="adauga(this,event)">
+						<input name="nume" type="text" placeholder=""/>
+						
+						<input id="submit" type="submit" value="Add item"/>
+				</form>
+
+				<br>
+
+				<button id="sort" onclick="sortare('nume');">Sort asc.</button>
+				<button id="sort" onclick="sortare2('nume');">Sort desc.</button>
+				
+				<br>
+
+				<table>
+						<thead>
+							<tr>
+								<td><b>Item description &nbsp; &nbsp; &nbsp;</b></td><br>
+								<td><b>Action</b></td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody id="marcat">
+						</tbody>
+					</table>
+			</div>
+		</div>
+		
+	</body>
+</html>

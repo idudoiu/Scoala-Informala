@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body{
+				background-color: #e4e6bd;
+                font-family: Arial, Helvetica, sans-serif;
+			}
+			.deleteBtn{
+                color: white;
+				background-color: #da300a;
+                border-radius: 5px;
+                border-color: #da300a;
+                padding: 9px;
+                width: 80px;
+			}
+            .editBtn{
+                color: white;			
+                background-color: #484aeb;
+                border-radius: 5px;
+                border-color: #484aeb;
+                padding: 9px;
+                width: 80px;
+            }
+            .content{
+                padding: 30px 30px 30px 30px;
+				width: 500px;
+				margin-left: auto; 
+				margin-right: auto;
+                background-color: #ebb01b;
+                border-radius: 9px;
+            }
+            .content2{
+				padding: 30px 30px 30px 30px;
+				width: 500px;
+				margin-left: auto; 
+				margin-right: auto;
+                background-color: #ebb01b;
+                border-radius: 10px;
+            }
+            #add{
+                color: white;
+                background-color: #484aeb;
+                border-radius: 5px;
+                border-color: #484aeb;
+                padding: 9px;
+            }
+            #n{
+                box-shadow: none !important;
+                border-radius: 5px;
+                border-color: transparent;
+                padding: 8px;
+                border-radius: 5px;          
+            }
+            #t{
+                box-shadow: none !important;
+                border-radius: 5px;
+                border-color: transparent;
+                padding: 8px;
+                border-radius: 5px;          
+            }
+            #ceva{
+                width:90%;
+                display:block;
+                margin:0 auto;
+            } 
+                       
+		</style>
+		<script>
+
+			var persoane=[
+			];
+			var indexEditare = -1;
+			console.log(persoane);
+
+			function deseneazaTabel(){
+				var str = "";
+				for(var i=0;i<persoane.length;i++){
+					str += `<tr>
+								<td>${persoane[i].nume}</td>
+								<td>${persoane[i].telefon}</td>
+								<td>
+									<button class="deleteBtn" onclick="sterge(${i});">DELETE</button>
+									<button class="editBtn" onclick="editeaza(${i});">EDIT</button>
+								</td>
+							</tr>`;
+				}				
+				console.log(str);
+				document.querySelector("table tbody").innerHTML=str;
+			}
+
+			function adauga(t,event){
+				event.preventDefault();
+				/*var pers = {};
+				pers.nume = t.querySelector("[name=nume]").value;
+				pers.telefon=t.querySelector("[name=telefon]").value;
+				
+				var pers = {
+					nume: t.querySelector("[name=nume]").value,
+					telefon:t.querySelector("[name=telefon]").value
+				};
+				*/
+				
+				var pers = {};
+				var inputs = t.querySelectorAll("input[name]");
+				for(var i=0;i<inputs.length;i++){
+					var a = inputs[i].getAttribute("name");
+					var v = inputs[i].value;
+					pers[a] = v;
+				}
+				if(indexEditare===-1){
+					persoane.push(pers);
+				}else{
+					persoane.splice(indexEditare,1,pers);
+					indexEditare = -1;
+				}
+				deseneazaTabel();
+				t.reset();
+			}
+
+			function sterge(idx){
+				if(confirm("Are you sure you want to delete?")){
+					persoane.splice(idx,1);
+					deseneazaTabel();
+				}
+			}
+
+			function editeaza(idx){
+				var persoana = persoane[idx];
+				var inputs = document.querySelectorAll("#formAdaugare input[name]");
+				for(var i=0;i<inputs.length;i++){
+					var a = inputs[i].getAttribute("name");
+					inputs[i].value=persoana[a];	
+				}
+				console.log(idx,persoana);
+				indexEditare=idx;
+			}
+		</script>
+	</head>
+    <body>
+        <h1 align="center" >Agenda</h1>
+            <form  class="content" id="formAdaugare" onsubmit="adauga(this,event)">
+                <dic id="ceva" align="center">
+                    <div style="display: inline;">
+                        Nume: <input id="n" name="nume" type="text"/>
+                    </div>
+                    <div style="display: inline;">
+                        Telefon: <input id="t" name="telefon" type="text"/>
+                    </div>
+                </dic>    
+                    <br>
+
+                    <input id="add" type="submit" value="ADAUGA CONTACT" style="display: block; margin: 0 auto;" />
+            
+            </form>
+
+        <br>
+        
+        <div class="content2">
+            <table style="width: 100%;">
+
+                <thead>
+                    <tr>
+                        <td ><b>Nume</b></td>
+                        <td ><b>Telefon</b></td>
+                        <td></td>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+	</body>
+</html>
