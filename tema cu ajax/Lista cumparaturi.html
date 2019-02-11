@@ -4,6 +4,7 @@
 		<style>
 			body{
 				background-color: #c498ec;
+				font-family: Arial, Helvetica, sans-serif;
 			}
 			.striketrough{
 				text-decoration: line-through;
@@ -13,10 +14,7 @@
 				margin-left: auto; 
 				margin-right: auto;
 			}
-			.mark{
-				background-color:pink;
-				border-radius: 3px;
-			}
+		
 			.formular{
 				background-color: white;
 				border-radius: 10px;
@@ -26,14 +24,30 @@
 				margin-left: auto; 
 				margin-right: auto;
 			}
+			#submit{
+				background-color: #4dff9d;
+				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				height: 32px;
+			}
 			#sort{
 				background-color: #c498ec;
 				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				height: 32px;
 			}
-			#submit{
-				background-color: #57f298;
+			.mark{
+				background-color:pink;
 				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				height: 32px;
 				
+			}
+			#input{
+				height: 25px;
 			}
 
 		</style>
@@ -153,7 +167,7 @@
 			<div class="content">
 			<h1>SHOPPING LIST</h1>
 				<form id="formAdaugare" onsubmit="adauga(this,event)">
-						<input name="nume" type="text" placeholder=""/>
+						<input id="input" minlength="2" name="nume" type="text" placeholder="" required/>
 						
 						<input id="submit" type="submit" value="Add item"/>
 				</form>

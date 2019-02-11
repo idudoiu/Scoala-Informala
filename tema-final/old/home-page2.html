@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MY shsop</title>
+    <link rel="stylesheet" type="text/css" href="grid.css">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #content .box {
+            border: 1px solid;
+            height: 350px;
+            border-color: #bbbbbb;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 3px;
+        }
+
+        #content .outer-box {
+            float: left;
+        }
+
+        #content {
+            background-color: #ffffff;
+            width: 1400px;
+            height: 1500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 250px;
+            max-width: 325px;
+        }
+
+        #pret {
+            font-size: 18px;
+            font-weight: bold;
+
+        }
+
+        #nume {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+
+
+        .but {
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+        }
+
+        .cart {
+            background-color: #e48d4a;
+            width: 100px;
+        }
+
+        .admin {
+            background-color: #3ec2ff;
+        }
+
+        .header-basic {
+            background-color: #292c2f;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+            padding: 20px 40px;
+            height: 75px;
+            box-sizing: border-box;
+        }
+
+        .header-basic .header-limiter {
+            max-width: 1400px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+
+        .header-basic .header-limiter h1 {
+            float: left;
+            font: normal 28px Cookie, Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            margin: 0;
+        }
+
+        .header-basic .header-limiter h1 span {
+            color: #3ec2ff;
+        }
+
+        /*  header  */
+
+        .header-basic .header-limiter a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .header-basic .header-limiter nav {
+            font: 16px Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            float: right;
+        }
+
+        .header-basic .header-limiter nav a {
+            display: inline-block;
+            padding: 0 5px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .header-basic .header-limiter nav a:hover {
+            opacity: 1;
+        }
+
+        .header-basic .header-limiter nav a.selected {
+            color: #608bd2;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        /* Making the header responsive */
+
+        @media all and (max-width: 600px) {
+
+            .header-basic {
+                padding: 20px 0;
+                height: 90px;
+
+            }
+
+            .header-basic .header-limiter h1 {
+                float: none;
+                margin: -8px 0 10px;
+                text-align: center;
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .header-basic .header-limiter nav {
+                line-height: 1;
+                float: none;
+            }
+
+            .header-basic .header-limiter nav a {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <script>
+
+        function ajax(method, url, body) {
+            return new Promise(function (resolve, reject) {
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            resolve(this.responseText)
+                        } else {
+                            reject(new Error("serverul a dat eroare"));
+                        }
+                    }
+                };
+                xhttp.open(method, url, true);
+                xhttp.send(body);
+            });
+        }
+
+        var persoane = [];
+        //golim lista pentru ca acum o preluam de pe server/firebase
+
+        async function getPersoane() {
+            var response = await ajax("get", "https://myshop-d.firebaseio.com/.json");
+            persoane = JSON.parse(response);
+            deseneazaTabel();
+        }
+
+        var indexEditare = -1;
+        console.log(persoane);
+        function deseneazaTabel() {
+            var str = "";
+            for (var i in persoane) {
+                if (persoane[i] === null) {
+                    continue;
+                }
+                str += `<div id="${i}" class="outer-box col-xs-12 col-md-6 col-lg-4 col-xl-3">
+                    
+                        <div class="box">
+                            
+                                <a href="#"> <img id="imagine" src="${persoane[i].imagine}"></a>
+
+                                <h3 id="nume" style="text-align: center;">${persoane[i].nume}</h3>
+
+                                <strong id="pret" style="float: left;" >${persoane[i].pret} lei</strong>
+                                
+                                <button style="float: right;" class="but cart" onclick="sterge('${i}');"> Buy </button>
+                                   
+                        </div>`;
+            }
+
+            console.log(str);
+            document.querySelector("#content").innerHTML = str;
+        }
+        // functie de sortae 
+
+        // function sortare(coloana){
+        //     persoane.sort(function (a,b){
+        //         if(a[coloana]>b[coloana]){
+        //             return 1;
+        //         }
+        //         if(a[coloana]<b[coloana]){
+        //             return -1;
+        //         }
+        //         return 0;
+        //     });
+        //     console.log(persoane);
+        //     deseneazaTabel();
+        // }
+        async function adauga(t, event) {
+            event.preventDefault();
+            var pers = {};
+            var inputs = t.querySelectorAll("input[name]");
+            for (var i = 0; i < inputs.length; i++) {
+                var a = inputs[i].getAttribute("name");
+                var v = inputs[i].value;
+                pers[a] = v;
+            }
+            if (indexEditare === -1) {
+                await ajax("POST", "https://myshop-d.firebaseio.com/.json", JSON.stringify(pers));
+            } else {
+                //persoane.splice(indexEditare,1,pers);
+                await ajax("PUT", `https://myshop-d.firebaseio.com/.json/${indexEditare}.json`, JSON.stringify(pers));
+                indexEditare = -1;
+            }
+            await getPersoane();
+            t.reset();
+        }
+        async function sterge(idx) {
+            if (confirm("Do you want to delete?")) {
+                await ajax("DELETE", `https://myshop-d.firebaseio.com/.json/${idx}.json`);
+                await getPersoane();
+            }
+        }
+        function editeaza(idx) {
+            var persoana = persoane[idx];
+            var inputs = document.querySelectorAll("#formAdaugare input[name]");
+            for (var i = 0; i < inputs.length; i++) {
+                var a = inputs[i].getAttribute("name");
+                inputs[i].value = persoana[a];
+            }
+            console.log(idx, persoana);
+            indexEditare = idx;
+        }
+    </script>
+</head>
+
+<body onload="getPersoane();">
+    <header class="header-basic">
+
+        <div class="header-limiter">
+
+            <h1><a href="#">MY<span>shop</span></a></h1>
+            <nav>
+                <a href="#"><button style="float: right;" class="but cart">Shopping cart</button></a>
+                <a href="#"><button style="float: right;" class="but admin">ADMIN</button></a>
+            </nav>
+        </div>
+
+    </header>
+
+    <div id="content">
+
+    </div>
+
+</body>
+
+</html>

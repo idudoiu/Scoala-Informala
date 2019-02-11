@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MAIN-admin</title>
+    <style>
+        body {
+            background-color: #d3d3d3;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        H2 {
+            margin: 20px;
+            float: left;
+        }
+
+        #content>div {
+            border: 1px solid;
+            height: auto;
+            display: inline-block;
+            float: left;
+            border-color: #bbbbbb;
+            padding: 20px;
+            width: 1320px;
+            margin: 20px;
+
+
+        }
+
+        #content {
+            width: 1400px;
+            height: 2000px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #ffffff;
+        }
+
+        /* buttons */
+        .deleteBtn {
+            color: #dc2b2b;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+            border: solid 1px;
+            border-color: #dc2b2b;
+            width: 100px;
+        }
+        .editBtn{
+            color: #3ec2ff;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+            border: solid 1px;
+            border-color: #3ec2ff;
+            width: 100px;
+        }
+
+        .but {
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+        }
+
+        .save {
+            background-color: #3ec2ff;
+            width: 200px;
+            border: solid 1px;
+            border-color: #3ec2ff;
+            float: left;
+            float: right;
+            margin: 20px;
+        }
+
+        .canc {
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+            background-color: #ffffff;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            width: 100px;
+            float: right;
+            margin: 0px 0px 0px 10px;
+        }
+
+        .cart {
+            background-color: #e48d4a;
+        }
+
+        .admin {
+            background-color: #3ec2ff;
+        }
+
+
+        /* details */
+
+        input {
+            width: 1100px;
+            float: right;
+            border-radius: 3px;
+            padding: 10px;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            vertical-align: middle;
+            margin: 0px 0px 10px 0px;
+            max-width: 80%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        p {
+            float: left;
+            width: 15%;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        /* TABLE */
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .table tr:hover {
+            background-color: #ddd;
+        }
+
+        .table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #3ec2ff;
+            color: white;
+        }
+
+        table td,
+        th {
+            /* border: 1px solid #e1e1e1; */
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+        }
+
+
+
+
+
+        /* HEAD */
+
+        .header-basic {
+            background-color: #292c2f;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+            padding: 20px 40px;
+            height: 75px;
+            box-sizing: border-box;
+        }
+
+        .header-basic .header-limiter {
+            max-width: 1400px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+
+        .header-basic .header-limiter h1 {
+            float: left;
+            font: normal 28px Cookie, Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            margin: 0;
+        }
+
+        .header-basic .header-limiter h1 span {
+            color: #3ec2ff;
+        }
+
+        /* The header links */
+
+        .header-basic .header-limiter a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .header-basic .header-limiter nav {
+            font: 16px Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            float: right;
+        }
+
+        .header-basic .header-limiter nav a {
+            display: inline-block;
+            padding: 0 5px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .header-basic .header-limiter nav a:hover {
+            opacity: 1;
+        }
+
+        .header-basic .header-limiter nav a.selected {
+            color: #608bd2;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        /* header */
+
+        @media all and (max-width: 600px) {
+
+            .header-basic {
+                padding: 20px 0;
+                height: 90px;
+
+            }
+
+            .header-basic .header-limiter h1 {
+                float: none;
+                margin: -8px 0 10px;
+                text-align: center;
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .header-basic .header-limiter nav {
+                line-height: 1;
+                float: none;
+            }
+
+            .header-basic .header-limiter nav a {
+                font-size: 16px;
+            }
+
+        }
+    </style>
+
+    <script>
+
+        function ajax(method, url, body) {
+            return new Promise(function (resolve, reject) {
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            resolve(this.responseText)
+                        } else {
+                            reject(new Error("serverul a dat eroare"));
+                        }
+                    }
+                };
+                xhttp.open(method, url, true);
+                xhttp.send(body);
+            });
+        }
+
+        var produse = [];
+        //golim lista pentru ca acum o preluam de pe server/firebase
+
+        async function getProduse() {
+            var response = await ajax("get", "https://myshop-d.firebaseio.com/produse.json");
+            produse = JSON.parse(response);
+            deseneazaTabel();
+        }
+
+        var indexEditare = -1;
+        console.log(produse);
+        function deseneazaTabel() {
+            var str = "";
+            for (var i in produse) {
+                if (produse[i] === null) {
+                    continue;
+                }
+                str += `<tr id="${i}">
+								<td><img width="50"  src="${produse[i].imagine}"/></td>
+								<td>${produse[i].nume}</td>
+								<td>${produse[i].pret}</td>
+                                <td>${produse[i].cantitate}</td>
+                                <td>
+                                        <a href="admin.html?id=${i}"> <button class="editBtn" onclick="editeaza('${i}');">Edit</button> </a>
+								</td>
+								<td>
+                                    <button class="deleteBtn" onclick="sterge('${i}');">Delete</button>
+								</td>
+							</tr>`;
+            }
+
+            console.log(str);
+            document.querySelector("table tbody").innerHTML = str;
+        }
+
+        // functia de adaugare in cos
+
+        var url = "https://myshop-d.firebaseio.com/"
+
+
+        async function adauga(t, event) {
+            event.preventDefault();
+            var prod = {};
+            var inputs = t.querySelectorAll("input[name]");
+            for (var i = 0; i < inputs.length; i++) {
+                var a = inputs[i].getAttribute("name");
+                var v = inputs[i].value;
+                prod[a] = v;
+            }
+            if (indexEditare === -1) {
+                await ajax("POST", "https://myshop-d.firebaseio.com/produse.json", JSON.stringify(prod));
+            } else {
+                //produse.splice(indexEditare,1,prod);
+                await ajax("PUT", `https://myshop-d.firebaseio.com/produse/${indexEditare}.json`, JSON.stringify(prod));
+                indexEditare = -1;
+            }
+            await getProduse();
+            t.reset();
+        }
+        async function sterge(idx) {
+            if (confirm("Do you want to delete?")) {
+                await ajax("DELETE", `https://myshop-d.firebaseio.com/produse/${idx}.json`);
+                await getProduse();
+            }
+        }
+        function editeaza(idx) {
+            var produs = produse[idx];
+            var inputs = document.querySelectorAll("#formAdaugare input[name]");
+            for (var i = 0; i < inputs.length; i++) {
+                var a = inputs[i].getAttribute("name");
+                inputs[i].value = produs[a];
+            }
+            console.log(idx, produs);
+            indexEditare = idx;
+        }
+    </script>
+
+</head>
+
+<body onload="getProduse()">
+    <header class="header-basic">
+
+        <div class="header-limiter">
+
+            <h1><a href="home-page3.html">MY<span>shop</span></a></h1>
+            <nav>
+                <a href="cart.html"><button style="float: right;" class="but cart">Shopping cart</button></a>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <div id="content">
+
+        <h2 style="display: inline;">Product management</h2>
+
+        <a href="admin.html"><button class="but save"> + Add product </button></a>
+
+
+        <div>
+            <table class="table" style="float: left;">
+                <thead class="cart-header">
+                    <tr>
+                        <th class="cart-header-item">Image</th>
+                        <th class="cart-header-item" style="width: 50%">Item</th>
+                        <th class="cart-header-item">Price</th>
+                        <th class="cart-header-item cart-header-quantity">Quantity</th>
+                        <th class="cart-header-item">Edit</th>
+                        <th class="cart-header-item">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
+
+            <!-- <tbody class="cart-list">
+                    <tr class="cart-item" id="">
+                        <td id="imagine"> </td>
+                        <td id="nume"> </td>
+                        <td id="pret"> </td>
+                        <td id="cantitate"> </td>
+                        <td id="del"> <a href="#"> Remove</a> </td>
+
+                    </tr>
+
+
+                </tbody> -->
+
+
+
+
+        </div>
+
+
+</body>
+
+</html>

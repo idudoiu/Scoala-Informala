@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: #9be1e5;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .content {
+            width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .but {
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+        }
+
+        .cont {
+            background-color: #5a9de6;
+        }
+
+        input{
+            width: 700px;
+            box-shadow: none !important;
+            border-radius: 5px;
+            border-color: transparent;
+            padding: 8px;
+            border-radius: 3px;
+            display: block;
+        }
+
+        textarea{
+            max-width: 700px;
+            width: 100%;
+            box-shadow: none !important;
+            border-radius: 5px;
+            border-color: transparent;
+            padding: 8px;
+            border-radius: 3px;           
+        }
+
+        p{
+            vertical-align: middle;
+            display: inline-block;
+            
+        }
+        
+        
+    </style>
+    <script>
+
+            function getLista(){
+			//functie care preia din firebase lista de produse
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+					//readyState 4 inseamna s-a finalizat requestul
+					//status 200 inseamna s-a finalizat cu succes (fara eroare)					   
+					   var produs = JSON.parse(this.responseText);
+                       document.getElementById("titlu").value=produs.nume
+					   document.getElementById("imagine").value=produs.imagine
+                       document.getElementById("ingrediente").innerHTML=produs.ingrediente
+                       document.getElementById("detalii").innerHTML=produs.reteta
+					}
+				};
+                var id=location.search.substring(4);
+				xhttp.open("GET", `https://lista-mea.firebaseio.com/${id}.json`, true);
+				xhttp.send();
+			}
+
+            var indexEditare = -1;
+
+            function adauga(t,event){
+				event.preventDefault();	
+			    var produs = {};
+                var inputs = t.querySelectorAll("input[text]");
+				for(var i=0;i<inputs.length;i++){
+					var a = inputs[i].getAttribute("text");
+					var v = inputs[i].value;
+					produs[a] = v;
+				}
+				if(indexEditare===-1){
+					var xhttp = new XMLHttpRequest();
+					xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                                getLista();
+                            }
+                        };
+                        xhttp.open("POST", "https://lista-mea.firebaseio.com/.json", true);
+                        xhttp.send(JSON.stringify(produs));
+                    }else{
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                getLista();
+                            }
+                        };
+                        xhttp.open("PUT", `https://lista-mea.firebaseio.com/${id}.json`, true);
+                        xhttp.send(JSON.stringify(produs));
+                        indexEditare = -1;
+                    }
+                    
+                }
+            
+    </script>
+</head>
+
+<body onload="getLista()">
+
+    <div class="formular">
+
+        <div class="content">
+            <div>
+                <h1 style="display: inline;">Cald si bun (ADMIN)</h1>
+
+                
+            </div>
+
+
+            <br>
+
+            <div style="width:100%">
+                
+                <form>
+                    
+                    <p>Nume:</p> <input type="text" id="titlu" name="titlu" style="float: right"> </input>
+
+                    <br>
+                    <br>
+
+                    <p>URL imagine:</p> <input type="text" id="imagine"  name="imagine" style="float: right" > </input>
+
+                    <br>
+                    <br>
+
+                    <p>Ingrediente:</p> <textarea type="text" rows="2"  id="ingrediente" style="float: right"> </textarea>
+
+                    <br>
+                    <br>
+
+                    <p>Mod de preparare:</p> <textarea type="text" rows="2"  id="detalii" style="float: right" > </textarea>
+                    
+                    <br>
+                    <br>
+
+                    <button class="but cont" onclick="adauga(this,event)">Salveaza preparat</button>
+                    
+                </form>
+                </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" type="text/css" href="grid.css">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #content>div {
+            border: 1px solid;
+            height: 300px;
+            display: inline-block;
+            float: left;
+            border-color: #bbbbbb;
+            padding: 20px;
+            width: 1320px;
+            margin: 20px;
+        }
+
+        #content {
+            width: 1400px;
+            height: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #ffffff;
+        }
+        
+/* buttons */
+        .but {
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+        }
+        .save{
+            background-color: #3ec2ff;
+            width: 100px;
+            border: solid 1px;
+            border-color: #3ec2ff;
+            float: right;
+            
+            
+
+        }
+        .canc{
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+            background-color: #ffffff;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            width: 100px;
+            float: right;
+            margin: 0px 0px 0px 10px;
+
+
+        }
+        .cart{
+            background-color: #e48d4a; 
+        }
+        .admin{
+            background-color: #3ec2ff; 
+        }
+            
+
+/* details */
+
+        input{
+            width: 1200px;
+            float: right;
+            border-radius: 3px;
+            padding: 10px;
+            border: solid 1px;
+            border-color: #bbbbbb;  
+        }   
+        
+        
+          
+
+/* HEAD */
+
+        .header-basic {
+            background-color: #292c2f;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+            padding: 20px 40px;
+            height: 75px;
+            box-sizing: border-box;
+        }
+
+        .header-basic .header-limiter {
+            max-width: 1400px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+/* Logo */
+
+        .header-basic .header-limiter h1 {
+            float: left;
+            font: normal 28px Cookie, Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            margin: 0;
+        }
+
+        .header-basic .header-limiter h1 span {
+            color: #3ec2ff;
+        }
+
+/*  header links */
+
+        .header-basic .header-limiter a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .header-basic .header-limiter nav {
+            font: 16px Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            float: right;
+        }
+
+        .header-basic .header-limiter nav a {
+            display: inline-block;
+            padding: 0 5px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .header-basic .header-limiter nav a:hover {
+            opacity: 1;
+        }
+
+        .header-basic .header-limiter nav a.selected {
+            color: #608bd2;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+/* header */
+
+        @media all and (max-width: 600px) {
+            
+            .header-basic {
+                padding: 20px 0;
+                height: 90px;
+
+            }
+
+            .header-basic .header-limiter h1 {
+                float: none;
+                margin: -8px 0 10px;
+                text-align: center;
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .header-basic .header-limiter nav {
+                line-height: 1;
+                float: none;
+            }
+
+            .header-basic .header-limiter nav a {
+                font-size: 16px;
+            }
+
+        }
+    </style>
+    <script>
+
+        function getLista() {
+            //functie care preia din firebase lista de produse
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //readyState 4 inseamna s-a finalizat requestul
+                    //status 200 inseamna s-a finalizat cu succes (fara eroare)					   
+                    var produs = JSON.parse(this.responseText);
+                    document.getElementById("imagine").value = produs.imagine
+                    document.getElementById("nume").value = produs.nume
+                    document.getElementById("descriere").value = produs.descriere
+                    document.getElementById("pret").value = produs.pret
+                    document.getElementById("cantitate").value = produs.cantitate
+
+                }
+            };
+            var id = location.search.substring(4);
+            xhttp.open("GET", `https://myshop-d.firebaseio.com/produse/${id}.json`, true);
+            xhttp.send();
+        }
+
+        function ajax(method, url, body) {
+            return new Promise(function (resolve, reject) {
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            resolve(this.responseText)
+                        } else {
+                            reject(new Error("serverul a dat eroare"));
+                        }
+                    }
+                };
+                xhttp.open(method, url, true);
+                xhttp.send(body);
+            });
+        }
+
+        var produse = [];
+        //golim lista pentru ca acum o preluam de pe server/firebase
+
+        async function getProduse() {
+            var response = await ajax("get", "https://myshop-d.firebaseio.com/produse.json");
+            produse = JSON.parse(response);
+            // deseneazaTabel();
+        }
+
+
+
+        // functie de adaugare / editare
+
+
+        var indexEditare = -1;
+        console.log(produse);
+
+        async function adauga(t, event) {
+            event.preventDefault();
+            var prod = {};
+            var inputs = document.querySelectorAll("input[name]");
+            for (var i = 0; i < inputs.length; i++) {
+                var a = inputs[i].getAttribute("name");
+                var v = inputs[i].value;
+                prod[a] = v;
+            }
+            if (indexEditare === -1) {
+                await ajax("POST", "https://myshop-d.firebaseio.com/produse.json", JSON.stringify(prod));
+            } else {
+                produse.splice(indexEditare,1,prod);
+                await ajax("PUT", `https://myshop-d.firebaseio.com/produse/${indexEditare}.json`, JSON.stringify(prod));
+                indexEditare = -1;
+            }
+            await getProduse();
+            t.reset();
+        }
+
+
+
+    </script>
+</head>
+
+
+<body onload="getLista()">
+    <header class="header-basic">
+
+        <div class="header-limiter">
+
+            <h1><a href="home-page3.html">MY<span>shop</span></a></h1>
+            <nav>
+                <a href="cart.html"><button style="float: right;" class="but cart">Shopping cart</button></a>
+            </nav>
+
+        </div>
+
+    </header>
+
+    <div id="content">
+
+        <div class="content">
+            <div>
+                <h2 style="display: inline;">Add item</h2>
+                <a href="MAIN-admin.html"><button class="but canc"> Cancel </button> </a>
+                <button class="but save" onclick="adauga(this,event)"> + Save </button>
+                <br>
+                <br>
+
+                <form>
+                    <div>Image <input type="text" id="imagine" value="" name="imagine"></input> </div>
+                    <br>
+                    <br>
+                    <div>Name: <input type="text" id="nume" value="" name="nume"></input> </div>
+                    <br>
+                    <br>
+                    <div>Details: <input type="text" id="descriere" value="" name="descriere"></input> </div>
+                    <br>
+                    <br>
+                    <div>Price <input type="number" id="pret" value="" name="pret"></input> </div>
+                    <br>
+                    <br>
+                    <div>Quantity <input type="number" id="cantitate" value="" name="cantitate"></input> </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+</body>
+
+</html>

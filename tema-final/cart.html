@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shopping cart</title>
+    <link rel="stylesheet" type="text/css" href="grid.css">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #content>div {
+            border: 1px solid;
+            height: auto;
+            display: inline-block;
+            float: left;
+            border-color: #bbbbbb;
+            padding: 20px;
+            width: 1320px;
+            margin: 20px;
+
+
+        }
+
+        #content {
+            width: 1400px;
+            height: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #ffffff;
+        }
+
+        /* buttons */
+        .but {
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+        }
+
+        .save {
+            background-color: #3ec2ff;
+            width: 100px;
+            border: solid 1px;
+            border-color: #3ec2ff;
+            float: left;
+        }
+
+        .canc {
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+            background-color: #ffffff;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            width: 100px;
+            float: right;
+            margin: 0px 0px 0px 10px;
+        }
+
+        .cart {
+            background-color: #e48d4a;
+        }
+
+        .admin {
+            background-color: #3ec2ff;
+        }
+
+
+        /* details */
+
+        input {
+            width: 1100px;
+            float: right;
+            border-radius: 3px;
+            padding: 10px;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            vertical-align: middle;
+            margin: 0px 0px 10px 0px;
+            max-width: 80%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        p {
+            float: left;
+            width: 15%;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        /* TABLE */
+
+        .table {
+            border-collapse: collapse;
+            width: 85%;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .table tr:hover {
+            background-color: #ddd;
+        }
+
+        .table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #e48d4a;
+            color: white;
+        }
+        table td, th {
+            /* border: 1px solid #e1e1e1; */
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+        }
+        
+
+
+
+
+        /* HEAD */
+
+        .header-basic {
+            background-color: #292c2f;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+            padding: 20px 40px;
+            height: 75px;
+            box-sizing: border-box;
+        }
+
+        .header-basic .header-limiter {
+            max-width: 1400px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+
+        .header-basic .header-limiter h1 {
+            float: left;
+            font: normal 28px Cookie, Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            margin: 0;
+        }
+
+        .header-basic .header-limiter h1 span {
+            color: #3ec2ff;
+        }
+
+        /* The header links */
+
+        .header-basic .header-limiter a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .header-basic .header-limiter nav {
+            font: 16px Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            float: right;
+        }
+
+        .header-basic .header-limiter nav a {
+            display: inline-block;
+            padding: 0 5px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .header-basic .header-limiter nav a:hover {
+            opacity: 1;
+        }
+
+        .header-basic .header-limiter nav a.selected {
+            color: #608bd2;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        /* header */
+
+        @media all and (max-width: 600px) {
+
+            .header-basic {
+                padding: 20px 0;
+                height: 90px;
+
+            }
+
+            .header-basic .header-limiter h1 {
+                float: none;
+                margin: -8px 0 10px;
+                text-align: center;
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .header-basic .header-limiter nav {
+                line-height: 1;
+                float: none;
+            }
+
+            .header-basic .header-limiter nav a {
+                font-size: 16px;
+            }
+
+        }
+    </style>
+    <script>
+
+
+            function getLista() {
+                //functie care preia din firebase lista de produse
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //readyState 4 inseamna s-a finalizat requestul
+                        //status 200 inseamna s-a finalizat cu succes (fara eroare)					   
+                        var produs = JSON.parse(this.responseText);
+                        document.getElementById("nume").innerHTML = produs.nume //cu asta iau imagine din baza
+                        document.getElementById("pret").innerHTML = produs.pret
+                        document.getElementById("cantitate").innerHTML = produs.cantitate
+                    }
+                };
+
+                var id = location.search.substring(4);
+                xhttp.open("GET", `https://myshop-d.firebaseio.com/cos/.json`, true);
+                xhttp.send();
+            }
+
+            
+    
+        </script>
+</head>
+
+<body onload="getLista()">
+        <header class="header-basic">
+
+        <div class="header-limiter">
+
+            <h1><a href="home-page3.html">MY<span>shop</span></a></h1>
+            <nav>
+                <a href="#"></a><button style="float: right;" class="but cart">Shopping cart</button></a>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <div id="content">
+
+        <div>
+            <table class="table" style="float: left;">
+                <thead class="cart-header">
+                    <tr>
+                        <th class="cart-header-item" style="width: 50%">Item</th>
+                        <th class="cart-header-item">Price</th>
+                        <th class="cart-header-item cart-header-quantity">Quantity</th>
+                        <th class="cart-header-item">Total</th>
+                        <th class="cart-header-item">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody class="cart-list">
+                    <tr class="cart-item">
+                        <td id="nume">  </td>
+                        <td id="pret">  </td>
+                        <td id="cantitate"><button class="addProd">+</button>   <button class="removeProd">-</button></td>
+                        <td id="total">  </td>
+                        <td id=""> <a href="#">  Remove</a> </td>
+                    </tr>
+                    
+                                
+                </tbody>
+            </table>
+            <div style="float: right;">
+                    <div> Produse: 3 </div>
+                    <div> TVA: 0% </div>
+                    <div> Transport: 15 lei </div>
+                    <div>
+                        <h2> Total: 2130 lei</h2>
+                    </div>
+                    <button class="but save" onclick=""> Buy </button>
+    
+                </div>
+
+         
+            
+        </div>
+
+
+</body>
+
+</html>

@@ -183,6 +183,27 @@
 		//	}
 		//}
 
+			//functie care permite numai caracter numerice
+				function validate(evt) {
+					var theEvent = evt || window.event;
+
+					// Handle paste
+					if (theEvent.type === 'paste') {
+						key = event.clipboardData.getData('text/plain');
+					} else {
+						// Handle key press
+						var key = theEvent.keyCode || theEvent.which;
+						key = String.fromCharCode(key);
+					}
+					var regex = /[0-9]|\./;
+					if (!regex.test(key)) {
+						theEvent.returnValue = false;
+						if (theEvent.preventDefault) theEvent.preventDefault();
+					}
+				}
+
+			
+
 		function editeaza(idx) { // nu merge :(
 			var persoana = persoane[idx];
 			var inputs = document.querySelectorAll("#formAdaugare input[name]");
@@ -202,10 +223,10 @@
 	<form class="content" id="formAdaugare" onsubmit="adauga(this,event)">
 		<dic id="ceva" align="center">
 			<div style="display: inline;">
-				Nume: <input id="n" name="nume" type="text" />
+				Nume: <input minlength="2" id="n" name="nume" type="text" required/>
 			</div>
 			<div style="display: inline;">
-				Telefon: <input id="t" name="telefon" type="text" />
+				Telefon: <input maxlength="10" id="t" name="telefon" type="text" required onkeypress='validate(event)'/>
 			</div>
 		</dic>
 		<br>

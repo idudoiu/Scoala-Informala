@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Details</title>
+    <link rel="stylesheet" type="text/css" href="grid.css">
+    <style>
+        body {
+            background-color: #d3d3d3;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #content>div {
+            border: 1px solid;
+            height: 360px;
+            display: inline-block;
+            float: left;
+            border-color: #bbbbbb;
+            padding: 20px;
+            width: 1320px;
+            margin: 20px;
+        }
+        #content {
+            width: 1400px;
+            height: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #ffffff;
+        }
+        .center{
+            width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #poza{
+            display: inline-block;
+        }
+
+        /* buttons */
+        .but {
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+        }
+
+        .save {
+            background-color: #e48d4a;
+            width: 100px;
+            border: solid 1px;
+            border-color: #e48d4a;
+            float: right;
+        }
+        img{
+            height: 350px;
+        }
+
+        .canc {
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            width: auto;
+            background-color: #ffffff;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            width: 100px;
+            float: right;
+            margin: 0px 0px 0px 10px;
+
+
+        }
+
+        .cart {
+            background-color: #e48d4a;
+        }
+
+        .admin {
+            background-color: #3ec2ff;
+        }
+
+
+        /* details */
+        
+        
+        table{
+            width: 100%;
+            /* border: solid 1px;
+            border-color: #bbbbbb; */
+        }
+
+        input {
+            width: 30px;
+            float: initial;
+            border-radius: 3px;
+            padding: 10px;
+            border: solid 1px;
+            border-color: #bbbbbb;
+            vertical-align: middle;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        p {
+            float: left;
+            width: 15%;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+
+
+        /* HEAD */
+
+        .header-basic {
+            background-color: #292c2f;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+            padding: 20px 40px;
+            height: 75px;
+            box-sizing: border-box;
+        }
+
+        .header-basic .header-limiter {
+            max-width: 1400px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+
+        .header-basic .header-limiter h1 {
+            float: left;
+            font: normal 28px Cookie, Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            margin: 0;
+        }
+
+        .header-basic .header-limiter h1 span {
+            color: #3ec2ff;
+        }
+
+        /* The header links */
+
+        .header-basic .header-limiter a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .header-basic .header-limiter nav {
+            font: 16px Arial, Helvetica, sans-serif;
+            line-height: 40px;
+            float: right;
+        }
+
+        .header-basic .header-limiter nav a {
+            display: inline-block;
+            padding: 0 5px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .header-basic .header-limiter nav a:hover {
+            opacity: 1;
+        }
+
+        .header-basic .header-limiter nav a.selected {
+            color: #608bd2;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        /* header */
+
+        @media all and (max-width: 600px) {
+
+            .header-basic {
+                padding: 20px 0;
+                height: 90px;
+
+            }
+
+            .header-basic .header-limiter h1 {
+                float: none;
+                margin: -8px 0 10px;
+                text-align: center;
+                font-size: 24px;
+                line-height: 1;
+            }
+
+            .header-basic .header-limiter nav {
+                line-height: 1;
+                float: none;
+            }
+
+            .header-basic .header-limiter nav a {
+                font-size: 16px;
+            }
+
+        }
+    </style>
+    <script>
+
+        function getLista() {
+            //functie care preia din firebase lista de produse
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //readyState 4 inseamna s-a finalizat requestul
+                    //status 200 inseamna s-a finalizat cu succes (fara eroare)					   
+                    var produs = JSON.parse(this.responseText);
+                    document.getElementById("imagine").src = produs.imagine //cu asta iau imagine din baza
+                    document.getElementById("nume").innerHTML = produs.nume
+                    document.getElementById("descriere").innerHTML = produs.descriere
+                    document.getElementById("pret").innerHTML = produs.pret
+                    document.getElementById("cantitate").innerHTML = produs.cantitate
+                }
+            };
+            var id = location.search.substring(4);
+            xhttp.open("GET", `https://myshop-d.firebaseio.com/produse/${id}.json`, true);
+            xhttp.send();
+        }
+
+        function ajax(method, url, body) {
+            return new Promise(function (resolve, reject) {
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            resolve(this.responseText)
+                        } else {
+                            reject(new Error("serverul a dat eroare"));
+                        }
+                    }
+                };
+                xhttp.open(method, url, true);
+                xhttp.send(body);
+            });
+        }
+        // functia de adaugare in cos
+
+        var url = "https://myshop-d.firebaseio.com/"
+
+        function adauga() {
+            var id = window.location.search.substring(4);
+            var cantitate = document.querySelector("#qty").value; // #cantitate" este id-ul inputului
+            adaugaCos(id, parseInt(cantitate));
+
+        }
+
+
+        async function adaugaCos(idProdus, cantitate) {
+            var cantitateInCos = JSON.parse(await ajax("GET", url + "cos/" + idProdus + ".json"));
+            var stoc = JSON.parse(await ajax("GET", url + "produse/" + idProdus + "/cantitate.json"));
+
+            if (cantitateInCos === null) {
+                cantitateInCos = 0;
+            } else {
+                cantitateInCos = cantitateInCos;
+            }
+            console.log(cantitate, cantitateInCos, stoc);
+            if (stoc < cantitate + cantitateInCos) {
+                cantitate = stoc;
+                //sau nu lasi utilizatorul
+            } else {
+                cantitate = cantitate + cantitateInCos;
+            }
+            await ajax("PUT", url + "cos/" + idProdus + "/.json", cantitate);
+        }
+
+    </script>
+
+    </script>
+</head>
+
+<body onload="getLista()">
+    <header class="header-basic">
+        <div class="header-limiter">
+            <h1><a href="home-page3.html">MY<span>shop</span></a></h1>
+            <nav>
+                <a href="cart.html"><button style="float: right;" class="but cart">Shopping cart</button></a>
+            </nav>
+        </div>
+    </header>
+
+
+    <div id="content">
+
+        <div class="content">
+            <div>
+                <table>
+                    <tr>
+                        <td>
+                            <div id="poza" style="float: left;">
+                                <img id="imagine" src="">
+
+                            </div>
+                        </td>
+                        <td width="70%">
+                            <div>
+                                <h3 id="nume" style="text-align: left;"> </h3>
+                                <span id="descriere" style="text-align: left;"> </span>
+
+                                <br>
+                                <br>
+
+                                <h3> <strong id="pret" style="text-align: left;">
+                                        <h3> </h3>
+                                    </strong> lei </h3>
+                                <hr>
+                                <dvi><span id="cantitate" style="text-align: left;"><strong>In stoc: </strong><span
+                                            style="text-align: left;">buc.</span> </span> pcs. in stoc</dvi>
+                                <br>
+                                <br>
+                                <span style="text-align: left;"> </span><input id="qty" type="number" name="titlu"></input>
+                                <br>
+                                <br>
+                                <button onclick="adauga()" style="float:left;" class="but save"> Add to cart </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

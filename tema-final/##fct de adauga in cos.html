@@ -1,0 +1,55 @@
+
+<script>
+// function xmlHttpRequestAsync(method, url, body){
+//     return new Promise(function(resolve, reject){
+//         let xhttp = new XMLHttpRequest();
+//         xhttp.onreadystatechange = function() {
+//             if (this.readyState === 4){
+//                 if(this.status === 200) {
+//                     resolve(this.responseText)
+//                 }else{
+//                     reject(new Error("serverul a dat eroare"));
+//                 }
+//             }
+//         };
+//         xhttp.open(method, url, true);
+//         xhttp.send(body);
+//     });
+// }
+
+var url = "https://myshop-d.firebaseio.com/"
+
+function adauga(){
+        var id = window.location.search.substring(4);
+        var cantitate = document.querySelector("#cantitate").value;
+        adaugaCos(id,parseInt(cantitate));
+        
+    }
+
+async function adaugaCos(idProdus, cantitate){
+    var cantitateInCos = JSON.parse(await ajax("GET", url+"cos/"+idProdus+".json" ));
+    var stoc = JSON.parse(await ajax("GET", url+"produse/"+idProdus+"/cantitate.json" ));
+    
+    if(cantitateInCos===null){
+        cantitateInCos=0;
+    }else{
+        cantitateInCos = cantitateInCos;
+    }
+    console.log(cantitate,cantitateInCos,stoc);
+    if(stoc<cantitate+cantitateInCos){
+        cantitate= stoc;
+        //sau nu lasi utilizatorul
+    }else{
+        cantitate = cantitate+cantitateInCos;
+    }
+    await ajax("PUT", url+"cos/"+idProdus+"/.json", cantitate);
+}
+
+
+
+
+
+
+</script>
+
+
