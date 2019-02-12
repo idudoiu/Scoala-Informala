@@ -256,7 +256,7 @@
                 }
             }
 
-            console.log(produseCosWithDetails)
+            // console.log(produseCosWithDetails)
             deseneazaTabelCart();
         }
 
@@ -272,7 +272,7 @@
                                 <td id="pret"> ${produseCosWithDetails[i].pret} </td>
                                 <td id="cantitate"> <button class="addProd">+</button>${produseCart[i]} <button class="removeProd">-</button></td>
                                 <td id="total"> </td>
-                                <td id=""> <a href="#"> Remove</a> </td>
+                                <td> <a onclick="sterge('${i}');"href="#"> Remove </a> </td>
                             </tr>`;
             }
             console.log(produseCart)
@@ -300,6 +300,13 @@
             //     xhttp.open("GET", `https://myshop-d.firebaseio.com/cos/.json`, true);
             //     xhttp.send();
             // }
+
+            async function sterge(idx){
+            if(confirm("Do you want to delete?")){
+                await ajax("DELETE", `https://myshop-d.firebaseio.com/cos/${idx}.json`);
+                await getProduseCart();
+            }
+        }
 
 
 
@@ -337,22 +344,18 @@
 
                 <tbody class="cart-list">
                     <tr class="cart-item">
-                        <td id="nume"> </td>
-                        <td id="pret"> </td>
-                        <td id="cantitate"><button class="addProd">+</button> <button class="removeProd">-</button></td>
-                        <td id="total"> </td>
-                        <td id=""> <a href="#"> Remove</a> </td>
+                        
                     </tr>
 
 
                 </tbody>
             </table>
             <div style="float: right;">
-                <div> Produse: 3 </div>
+                <div> Produse:  </div>
                 <div> TVA: 0% </div>
-                <div> Transport: 15 lei </div>
+                <div> Transport:  lei </div>
                 <div>
-                    <h2> Total: 2130 lei</h2>
+                    <h2> Total:  lei</h2>
                 </div>
                 <button class="but save" onclick=""> Buy </button>
 
