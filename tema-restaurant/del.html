@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body{
+				    background-color: #9be1e5;
+            font-family: Arial, Helvetica, sans-serif;
+			  }
+			.content{
+            width: 900px;
+            margin-left: auto; 
+            margin-right: auto;
+			}
+        #myInput{
+            box-shadow: none !important;
+            border-radius: 5px;
+            border-color: transparent;
+            padding: 8px;
+            border-radius: 3px;
+            width: 182px;
+            margin: 0 0 10px 0;
+        }
+        .but{
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            margin: 5px;
+            width: 80px;
+        }
+        .add{
+            width: 120px;
+        }
+        .det{
+            background-color: #db3d7a; 
+        }
+
+        .cont{
+            background-color: #5a9de6;
+        }
+    
+        .caut{
+            background-color: #db3d7a;
+            width: 160px;
+        }
+
+        tr{
+            text-align: justify;
+        }
+
+        img{
+          border-radius: 5px;
+        }
+
+        table {
+          width: 100%;
+        }
+		</style>
+        <script>
+
+            function getLista(){
+			    //functie care preia din firebase lista de produse
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+					//readyState 4 inseamna s-a finalizat requestul
+					//status 200 inseamna s-a finalizat cu succes (fara eroare)					   
+					   lista = JSON.parse(this.responseText);
+					   //this.responseText este continutul raspunsului; !! ca String
+					   //JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+					}
+				};
+				var id=location.search.substring(4);
+				xhttp.open("GET", `https://lista-mea.firebaseio.com/${id}.json`, true);
+				xhttp.send();
+			}
+
+            function sterge(idx){
+				if(confirm("Do you want to delete?")){
+				//cand stergem; trebuie sa modificam baza de date si apoi sa preluam noile informatii de pe server
+					var xhttp = new XMLHttpRequest();
+					xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+						   // Typical action to be performed when the document is ready:
+						   //cand s-a finalizat cu succes requestul, apelez getPersoane pentru a prelua din nou de pe server lista de persoane
+						   //dupa ce se preia, se apeleaza iar deseneaza tabel ca sa imi actualizeze interfata
+						   getLista();
+						}
+					};
+					//se foloseste DELETE in loc de GET
+					//Am schimbat din "" in `` pentru a putea sa inserez cu ${} informatii din javascript in TEXT
+					//in cazul nostru, indexul elementului care il sterg;
+					xhttp.open("DELETE", `https://fir-grupa-4.firebaseio.com/${idx}.json`, true);
+					//IMPORTANT; .json trebuie sa fie mereu prezent;
+					//Daca nu inseram ${idx} inainte de .json, as fi sters toata baza de date
+					xhttp.send();
+					
+
+				}
+			}
+
+		</script>
+</head>
+
+<body onload="(getLista)">
+
+    <div class="formular">
+
+        <div class="content">
+            <div>
+                <h1 style="display: inline;">Cald si bun (ADMIN)</h1>
+                <br>
+                <br>
+                <h3 style="display: inline;">Esti gata sa stergi preparatul: </h3>
+                <br>
+                <br>
+                <h3 style="display: inline;">Confirmi stergerea? </h3>
+                <br>
+                <br>
+                <a href="detalii.html?id=${i}"> <button class="but det ">Da</button> </a>
+
+
+                <button class="but cont">Nu</button>
+                
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

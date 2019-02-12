@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		body{
+				background-color: #e4e6bd;
+                font-family: Arial, Helvetica, sans-serif;
+			}
+			.deleteBtn{
+                color: white;
+				background-color: #da300a;
+                border-radius: 5px;
+                border-color: #da300a;
+                padding: 9px;
+                width: 80px;
+			}
+            .editBtn{
+                color: white;			
+                background-color: #484aeb;
+                border-radius: 5px;
+                border-color: #484aeb;
+                padding: 9px;
+                width: 80px;
+            }
+            .content{
+                padding: 30px 30px 30px 30px;
+				width: 500px;
+				margin-left: auto; 
+				margin-right: auto;
+                background-color: #ebb01b;
+                border-radius: 9px;
+            }
+            .content2{
+				padding: 30px 30px 30px 30px;
+				width: 500px;
+				margin-left: auto; 
+				margin-right: auto;
+                background-color: #ebb01b;
+                border-radius: 10px;
+            }
+            #add{
+                color: white;
+                background-color: #484aeb;
+                border-radius: 5px;
+                border-color: #484aeb;
+                padding: 9px;
+            }
+            #n{
+                box-shadow: none !important;
+                border-radius: 5px;
+                border-color: transparent;
+                padding: 8px;
+                border-radius: 5px;          
+            }
+            #t{
+                box-shadow: none !important;
+                border-radius: 5px;
+                border-color: transparent;
+                padding: 8px;
+                border-radius: 5px;          
+            }
+            #ceva{
+                width:90%;
+                display:block;
+                margin:0 auto;
+            } 
+                       
+		</style>
+	<script>
+
+		var persoane = [];
+		var indexEditare = -1;
+		console.log(persoane);
+
+		function getLista() {
+			//functie care preia din firebase lista de persoane
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					//readyState 4 inseamna s-a finalizat requestul
+					//status 200 inseamna s-a finalizat cu succes (fara eroare)
+					// Typical action to be performed when the document is ready:
+
+					persoane = JSON.parse(this.responseText);
+					//this.responseText este continutul raspunsului; !! ca String
+					//JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+					deseneazaTabel();
+				}
+			};
+			xhttp.open("GET", "https://agenda-tel.firebaseio.com/.json", true);
+			xhttp.send();
+		}
+
+		function deseneazaTabel() {
+			var str = "";
+			for (var i in persoane) {
+				str += `<tr>
+								<td>${persoane[i].nume}</td>
+								<td>${persoane[i].telefon}</td>
+								<td>
+									<button class="deleteBtn" onclick="sterge('${i}');">DELETE</button>
+									<button class="editBtn" onclick="editeaza('${i}');">EDIT</button>
+								</td>
+							</tr>`;
+			}
+			console.log(str);
+			document.querySelector("table tbody").innerHTML = str;
+		}
+
+		function adauga(t, event) {
+			event.preventDefault();
+			/*var pers = {};
+			pers.nume = t.querySelector("[name=nume]").value;
+			pers.telefon=t.querySelector("[name=telefon]").value;
+			
+			var pers = {
+				nume: t.querySelector("[name=nume]").value,
+				telefon:t.querySelector("[name=telefon]").value
+			};
+			*/
+
+			var pers = {};
+			var inputs = t.querySelectorAll("input[name]");
+			for (var i = 0; i < inputs.length; i++) {
+				var a = inputs[i].getAttribute("name");
+				var v = inputs[i].value;
+				pers[a] = v;
+			}
+			if (indexEditare === -1) {
+				// persoane.push(pers); functia veche de adaugare
+
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function () {
+					if (this.readyState == 4 && this.status == 200) {
+						getLista();
+					}
+				};
+				xhttp.open("POST", "https://agenda-tel.firebaseio.com/.json", true);
+				xhttp.send(JSON.stringify(pers));
+			}
+			deseneazaTabel();
+			t.reset();
+		}
+
+
+		// }else{
+		// 	persoane.splice(indexEditare,1,pers);
+		//	indexEditare = -1;
+		//}
+		//deseneazaTabel();
+		//t.reset();
+		//}
+
+
+		function sterge(idx) {
+			if (confirm("Do you want to delete?")) {
+				//cand stergem; trebuie sa modificam baza de date si apoi sa preluam noile informatii de pe server
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function () {
+					if (this.readyState == 4 && this.status == 200) {
+						//cand s-a finalizat cu succes requestul, apelez getLista pentru a prelua din nou de pe server lista de persoane
+						//dupa ce se preia, se apeleaza iar deseneaza tabel ca sa imi actualizeze interfata
+						getLista();
+						deseneazaTabel();
+					}
+				};
+				//se foloseste DELETE in loc de GET
+				//Am schimbat din "" in `` pentru a putea sa inserez cu ${} informatii din javascript in TEXT
+				//in cazul nostru, indexul elementului pe care il sterg;
+				xhttp.open("DELETE", `https://agenda-tel.firebaseio.com/${idx}.json`, true);
+				//IMPORTANT; .json trebuie sa fie mereu prezent;
+				//Daca nu inseram ${idx} inainte de .json, as fi sters toata baza de date
+				xhttp.send();
+			}
+		}
+
+// functia veche de stergere
+		//function sterge(idx){                                
+		//	if(confirm("Are you sure you want to delete?")){
+		//		persoane.splice(idx,1);
+		//		deseneazaTabel();
+		//	}
+		//}
+
+			//functie care permite numai caracter numerice
+				function validate(evt) {
+					var theEvent = evt || window.event;
+
+					// Handle paste
+					if (theEvent.type === 'paste') {
+						key = event.clipboardData.getData('text/plain');
+					} else {
+						// Handle key press
+						var key = theEvent.keyCode || theEvent.which;
+						key = String.fromCharCode(key);
+					}
+					var regex = /[0-9]|\./;
+					if (!regex.test(key)) {
+						theEvent.returnValue = false;
+						if (theEvent.preventDefault) theEvent.preventDefault();
+					}
+				}
+
+			
+
+		function editeaza(idx) { // nu merge :(
+			var persoana = persoane[idx];
+			var inputs = document.querySelectorAll("#formAdaugare input[name]");
+			for (var i = 0; i < inputs.length; i++) {
+				var a = inputs[i].getAttribute("name");
+				inputs[i].value = persoana[a];
+			}
+			console.log(idx, persoana);
+			indexEditare = idx;
+		}
+
+	</script>
+</head>
+
+<body onload="getLista();">
+	<h1 align="center">Agenda</h1>
+	<form class="content" id="formAdaugare" onsubmit="adauga(this,event)">
+		<dic id="ceva" align="center">
+			<div style="display: inline;">
+				Nume: <input minlength="2" id="n" name="nume" type="text" required/>
+			</div>
+			<div style="display: inline;">
+				Telefon: <input maxlength="10" id="t" name="telefon" type="text" required onkeypress='validate(event)'/>
+			</div>
+		</dic>
+		<br>
+
+		<input id="add" type="submit" value="ADAUGA CONTACT" style="display: block; margin: 0 auto;" />
+
+	</form>
+
+	<br>
+
+	<div class="content2">
+		<table style="width: 100%;">
+
+			<thead>
+				<tr>
+					<td><b>Nume</b></td>
+					<td><b>Telefon</b></td>
+					<td></td>
+				</tr>
+			</thead>
+
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>

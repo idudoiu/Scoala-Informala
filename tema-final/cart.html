@@ -118,12 +118,14 @@
             background-color: #e48d4a;
             color: white;
         }
-        table td, th {
+
+        table td,
+        th {
             /* border: 1px solid #e1e1e1; */
             border-bottom: 1px solid #ddd;
             padding: 12px;
         }
-        
+
 
 
 
@@ -220,33 +222,92 @@
     </style>
     <script>
 
-
-            function getLista() {
-                //functie care preia din firebase lista de produse
-                var xhttp = new XMLHttpRequest();
+        function ajax(method, url, body) {
+            return new Promise(function (resolve, reject) {
+                let xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        //readyState 4 inseamna s-a finalizat requestul
-                        //status 200 inseamna s-a finalizat cu succes (fara eroare)					   
-                        var produs = JSON.parse(this.responseText);
-                        document.getElementById("nume").innerHTML = produs.nume //cu asta iau imagine din baza
-                        document.getElementById("pret").innerHTML = produs.pret
-                        document.getElementById("cantitate").innerHTML = produs.cantitate
+                    if (this.readyState === 4) {
+                        if (this.status === 200) {
+                            resolve(this.responseText)
+                        } else {
+                            reject(new Error("serverul a dat eroare"));
+                        }
                     }
                 };
+                xhttp.open(method, url, true);
+                xhttp.send(body);
+            });
+        }
 
-                var id = location.search.substring(4);
-                xhttp.open("GET", `https://myshop-d.firebaseio.com/cos/.json`, true);
-                xhttp.send();
+        var produseCart = [];
+        var produseCosWithDetails = [];
+        var produsCos;
+        //golim lista pentru ca acum o preluam de pe server/firebase
+
+        async function getProduseCart() {
+            var response = await ajax("get", "https://myshop-d.firebaseio.com/cos.json");
+            produseCart = JSON.parse(response);
+
+            for (var key in produseCart) {
+                if (produseCart.hasOwnProperty(key)) {
+                    var responseCart = await ajax("get", `https://myshop-d.firebaseio.com/produse/${key}.json`);
+                    produsCos = JSON.parse(responseCart);
+                    produseCosWithDetails.push(produsCos);
+                }
             }
 
-            
-    
-        </script>
+            console.log(produseCosWithDetails)
+            deseneazaTabelCart();
+        }
+
+        function deseneazaTabelCart() {
+            var str = "";
+            for (var i in produseCosWithDetails) {
+                if (produseCosWithDetails[i] === null) {
+                    continue;
+                }
+                str += `
+                            <tr id="${i}" class="cart-item">
+                                <td id="nume"> ${produseCosWithDetails[i].nume} </td>
+                                <td id="pret"> ${produseCosWithDetails[i].pret} </td>
+                                <td id="cantitate"> <button class="addProd">+</button>${produseCart[i]} <button class="removeProd">-</button></td>
+                                <td id="total"> </td>
+                                <td id=""> <a href="#"> Remove</a> </td>
+                            </tr>`;
+            }
+            console.log(produseCart)
+
+            //console.log(str);
+            document.querySelector(".cart-list").innerHTML = str;
+        }
+
+
+            // function getLista() {
+            //     //functie care preia din firebase lista de produse
+            //     var xhttp = new XMLHttpRequest();
+            //     xhttp.onreadystatechange = function () {
+            //         if (this.readyState == 4 && this.status == 200) {
+            //             //readyState 4 inseamna s-a finalizat requestul
+            //             //status 200 inseamna s-a finalizat cu succes (fara eroare)					   
+            //             var produs = JSON.parse(this.responseText);
+            //             document.getElementById("nume").innerHTML = produs.nume //cu asta iau imagine din baza
+            //             document.getElementById("pret").innerHTML = produs.pret
+            //             document.getElementById("cantitate").innerHTML = produs.cantitate
+            //         }
+            //     };
+
+            //     var id = location.search.substring(4);
+            //     xhttp.open("GET", `https://myshop-d.firebaseio.com/cos/.json`, true);
+            //     xhttp.send();
+            // }
+
+
+
+    </script>
 </head>
 
-<body onload="getLista()">
-        <header class="header-basic">
+<body onload="getProduseCart()">
+    <header class="header-basic">
 
         <div class="header-limiter">
 
@@ -276,29 +337,29 @@
 
                 <tbody class="cart-list">
                     <tr class="cart-item">
-                        <td id="nume">  </td>
-                        <td id="pret">  </td>
-                        <td id="cantitate"><button class="addProd">+</button>   <button class="removeProd">-</button></td>
-                        <td id="total">  </td>
-                        <td id=""> <a href="#">  Remove</a> </td>
+                        <td id="nume"> </td>
+                        <td id="pret"> </td>
+                        <td id="cantitate"><button class="addProd">+</button> <button class="removeProd">-</button></td>
+                        <td id="total"> </td>
+                        <td id=""> <a href="#"> Remove</a> </td>
                     </tr>
-                    
-                                
+
+
                 </tbody>
             </table>
             <div style="float: right;">
-                    <div> Produse: 3 </div>
-                    <div> TVA: 0% </div>
-                    <div> Transport: 15 lei </div>
-                    <div>
-                        <h2> Total: 2130 lei</h2>
-                    </div>
-                    <button class="but save" onclick=""> Buy </button>
-    
+                <div> Produse: 3 </div>
+                <div> TVA: 0% </div>
+                <div> Transport: 15 lei </div>
+                <div>
+                    <h2> Total: 2130 lei</h2>
                 </div>
+                <button class="but save" onclick=""> Buy </button>
 
-         
-            
+            </div>
+
+
+
         </div>
 
 

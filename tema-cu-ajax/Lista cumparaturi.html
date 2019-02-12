@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body{
+				background-color: #c498ec;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			.striketrough{
+				text-decoration: line-through;
+			}
+			.content{
+				width: 300px;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+		
+			.formular{
+				background-color: white;
+				border-radius: 10px;
+				width: 600px;
+				margin: 10px;
+				padding: 20px;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+			#submit{
+				background-color: #4dff9d;
+				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				height: 32px;
+			}
+			#filt{
+				background-color: #c498ec;
+				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				height: 32px;
+			}
+			.mark{
+				background-color:pink;
+				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				height: 32px;
+				
+			}
+			#input{
+				height: 25px;
+			}
+
+		</style>
+		<script>
+			var persoane=[];
+			function ajax(){
+			//functie care preia din firebase lista de persoane
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+					//readyState 4 inseamna s-a finalizat requestul
+					//status 200 inseamna s-a finalizat cu succes (fara eroare)
+					   // Typical action to be performed when the document is ready:
+					   
+					   persoane = JSON.parse(this.responseText);
+					   //this.responseText este continutul raspunsului; !! ca String
+					   //JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+					   deseneazaTabel();
+					}
+				};
+				xhttp.open("GET", "https://lista-cump.firebaseio.com/.json", true);
+				xhttp.send();
+			}
+			var indexEditare = -1;			
+			function deseneazaTabel(){
+				var str = "";
+				for(var i in persoane){
+					str += `<tr>
+								<td>${persoane[i].nume}</td>
+								<td>
+									<button class="mark" onclick="taie(${i});">Mark as buyed</button>
+								</td>
+							</tr>`;
+				}
+				if(persoane[i].mark===true){ //adaugat azi nu merge
+					persoane="striketrough";
+				}
+				document.querySelector("table tbody").innerHTML=str;
+			}
+			function adauga(t,event){
+				event.preventDefault();
+				var pers = {};
+				var pers = { //adaugat azi nu merge
+					marcat:false
+					};
+				var inputs = t.querySelectorAll("input[name]");
+				for(var i=0;i<inputs.length;i++){
+					var a = inputs[i].getAttribute("name");
+					var v = inputs[i].value;
+					pers[a] = v;
+				}
+				if(indexEditare===-1){
+					// persoane.push(pers); - functia veche de adaugare(push)
+					
+					var xhttp = new XMLHttpRequest();
+					xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							ajax();
+						}
+					};
+					xhttp.open("POST", "https://lista-cump.firebaseio.com/.json", true);
+					xhttp.send(JSON.stringify(pers));
+				}
+				deseneazaTabel();
+				t.reset();
+			}
+
+			
+			function sortare(coloana){
+				persoane.sort(function (a,b){
+					if(a[coloana]>b[coloana]){
+						return 1;
+					}
+					if(a[coloana]<b[coloana]){
+						return -1;
+					}
+					return 0;
+				});
+				deseneazaTabel();
+			}
+			function sortare2(coloana){ // sortarea nu merge
+				persoane.sort(function (a,b){
+					if(a[coloana]<b[coloana]){
+						return 1;
+					}
+					if(a[coloana]>b[coloana]){
+						return -1;
+					}
+					return 0;
+				});
+				console.log(persoane);
+				deseneazaTabel();
+			}
+			
+			function taie(idx) { //adaugat azi nu merge
+				if(persoane[idex].marcat === true) {
+					(persoane[idx].marcat = false)
+				}else{
+					(persoane[idx].marcat = true)
+				}
+				deseneazaTabel();
+			}
+
+
+			
+		</script>
+	</head>
+	<body onload="ajax();">
+		<div class="formular">
+			<div class="content">
+			<h1>SHOPPING LIST</h1>
+				<form id="formAdaugare" onsubmit="adauga(this,event)">
+						<input id="input" minlength="2" name="nume" type="text" placeholder="" required/>
+						
+						<input id="submit" type="submit" value="Add item"/>
+				</form>
+
+				<br>
+
+				<button id="filt" onclick="sortare('nume');">Sort asc.</button>
+				<button id="filt" onclick="sortare2('nume');">Sort desc.</button>
+				
+				<br>
+
+				<table>
+						<thead>
+							<tr>
+								<td><b>Item description &nbsp; &nbsp; &nbsp;</b></td><br>
+								<td><b>Action</b></td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody id="marcat">
+						</tbody>
+					</table>
+			</div>
+		</div>
+		
+	</body>
+</html>

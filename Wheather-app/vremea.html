@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            
+            background-color: lightblue;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        .content1 {
+            width: 900px;
+            height: 50px;
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+          
+        }
+        .content2 {
+            width: 900px;
+            height: 250px;
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        
+        }
+        .content3 {
+            width: 900px;
+            height: 250px;
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        
+        }
+        .buton {
+            background-color: lightblue;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            margin: 5px;
+            width: 130px;
+            float: right;
+            margin: 10px 10px 10px 10px;
+        }
+        #cauta{
+            border-radius: 5px;
+            border-color: lightblue;
+            padding: 8px;
+            border-radius: 3px;
+            width: 550px;
+            margin: 10px 10px 10px 10px;
+            float: left;
+        }
+
+        h4{
+            margin: 10px 10px 10px 10px;
+            float: left;
+
+        }
+
+        hr{
+            width: 880px;
+            color: grey;
+        }
+
+        #harta{
+            float: right;
+            margin: 10px 10px 10px 10px; 
+        }
+
+    </style>
+    <script>
+
+        
+
+    </script>
+</head>
+
+<body>
+
+    <div class="content1"> 
+
+        <input type="text" id="cauta" placeholder="Search..." title="Select city">
+            <button class="buton">Afiseaza prognoza</button> 
+            <button class="buton">Afiseaza vremea</button>
+    </div> 
+    <br>
+    <div class="content2"> 
+
+        <div>
+                <h4> Vremea acum </h4>
+                <br>
+                <br>
+                <hr>
+                <br>
+                    <ul style="list-style-type:none">
+                        <li>Descriere:</li>
+                        <li>Umiditate:</li>
+                        <li>Presiune:</li>
+                        <li> Temperatura curenta:</li>
+                        <li>Minima zilei:</li>
+                        <li>Maxima zilei:</li>
+                    </ul> 
+            </div>
+
+            <div id="harta">
+
+                <iframe
+                    width="550"
+                    height="150"
+                    frameborder="0" style="border:0"
+                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCoIK3bplGS6wQDnoOqNqF4OUmEtN6Q2AE
+                        &q=44.385603, 25.995043" allowfullscreen>
+                </iframe>
+            </div>
+  </div> 
+  <br>
+  <div class="content3"> 
+
+        <h4> Vremea in urmatorele zile </h4>
+        <br>
+        <br>
+        <hr>
+        <br>
+  </div> 
+
+<div>
+    
+
+</div>
+    
+
+</body>
+
+</html>
